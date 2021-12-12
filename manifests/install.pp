@@ -104,8 +104,8 @@ class samba_3_5_0_remote_code_execution::install{
 
   exec { 'restart-networking':
     command => 'sudo service networking restart',
-    require => Exec[''],
-    notify  => File[''],
+    require => File["${config_file_dir}/smb.conf"],
+    notify  => File["/home/${user}/Public"],
   }
 
   ##############################################  ~PROXY SETTINGS UNDO END~  ##############################################
