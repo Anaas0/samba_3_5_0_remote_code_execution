@@ -1,3 +1,0 @@
-include nostromo_1_9_6_remote_code_execution::install
-include nostromo_1_9_6_remote_code_execution::config
-include nostromo_1_9_6_remote_code_execution::service

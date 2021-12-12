@@ -1,4 +1,4 @@
 #
-class nostromo_1_9_6_remote_code_execution::service{
+class samba_2_5_0_remote_code_execution::service{
 
 }
