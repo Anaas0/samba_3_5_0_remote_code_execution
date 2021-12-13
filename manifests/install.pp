@@ -23,13 +23,7 @@ class samba_3_5_0_remote_code_execution::install{
   }
 
   # Install Packages
-  ensure_packages('acl')
-  ensure_packages('xattr')
-  ensure_packages('gnutls-bin')
-  ensure_packages('libreadline-dev')
-  ensure_packages('make')
-  ensure_packages('gcc')
-  ensure_packages('autoconf')
+  ensure_packages(['acl','xattr','gnutls-bin','libreadline-dev','make','gcc','autoconf'])
 
   # Make install dir
   file { "${build_dir}/":

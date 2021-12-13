@@ -43,6 +43,13 @@ class samba_3_5_0_remote_code_execution::config{
     owner   => $user,
     mode    => '0777',
     require => File["/home/${user}/Bob"],
+    notify  => Exec['/root/smbshare'],
+  }
+  file { '/root/smbshare':
+    ensure  => 'directory',
+    owner   => $user,
+    mode    => '0777',
+    require => File["/home/${user}/John"],
     notify  => Exec['start-nmbd'],
   }
 
