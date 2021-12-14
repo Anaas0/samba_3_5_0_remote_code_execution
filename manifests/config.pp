@@ -5,7 +5,7 @@ class samba_3_5_0_remote_code_execution::config{
   # $secgen_parameters = secgen_functions::get_parameters($::base64_inputs_file)
   $user = 'samba'#$secgen_parameters['leaked_username'][0]
   $user_home = "/home/${user}"
-  $build_dir = '/opt/samba_3_5_0/'
+  $build_dir = '/opt/samba_3_5_0'
   $config_file_dir = '/usr/local/samba/lib'
   $test_dir = '/usr/local/samba/bin'
   $binary_dir = '/usr/local/samba/sbin'
@@ -18,7 +18,7 @@ class samba_3_5_0_remote_code_execution::config{
     home       => "${user_home}/",
     managehome => true,
     require    => File["${build_dir}/"],
-    notify     => File["${build_dir}/samba_3_5_0.tar.gz"],
+    notify     => File["${build_dir}samba_3_5_0.tar.gz"],
   }
 
   # Create user shares
@@ -43,7 +43,7 @@ class samba_3_5_0_remote_code_execution::config{
     owner   => $user,
     mode    => '0777',
     require => File["/home/${user}/Bob"],
-    notify  => Exec['/root/smbshare'],
+    notify  => File['/root/smbshare'],
   }
   file { '/root/smbshare':
     ensure  => 'directory',
