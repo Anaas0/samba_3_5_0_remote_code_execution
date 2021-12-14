@@ -8,7 +8,7 @@ class samba_3_5_0_remote_code_execution::install{
   $build_dir = '/opt/samba_3_5_0'
   $config_file_dir = '/usr/local/samba/lib'
   $test_dir = '/usr/local/samba/bin'
-  $puppet_files_path = 'puppet:///modules/samba_3_5_0_remote_code_execution/files'
+  $puppet_files_path = 'puppet:///modules/samba_3_5_0_remote_code_execution'
 
   # Proxy
   exec { 'set-nic-dhcp':
@@ -18,8 +18,19 @@ class samba_3_5_0_remote_code_execution::install{
   }
   exec { 'set-sed':
     command   => "sudo sed -i 's/172.33.0.51/172.22.0.51/g' /etc/systemd/system/docker.service.d/* /etc/environment /etc/apt/apt.conf /etc/security/pam_env.conf",
-    notify    => Package['acl'],
+    notify    => User["${user}"],
     logoutput => true,
+  }
+
+    # Create user(s)
+  user { "${user}":
+    ensure     => present,
+    uid        => '666',
+    gid        => 'root',#
+    home       => "${user_home}/",
+    managehome => true,
+    require    => Exec['set-sed'],
+    notify     => Package['acl'],
   }
 
   # Install Packages
@@ -31,12 +42,12 @@ class samba_3_5_0_remote_code_execution::install{
     owner   => $user,
     mode    => '0755',
     require => Package['autoconf'],
-    notify  => User["${user}"]
+    notify  => File["${build_dir}/samba_3_5_0.tar.gz"],
   }
 
   # Copy tar ball to build dir
   file { "${build_dir}/samba_3_5_0.tar.gz":
-    source  => "${puppet_files_path}/samba_3_5_0.tar.gz",
+    source  => 'puppet:///modules/samba_3_5_0_remote_code_execution/samba_3_5_0.tar.gz',
     owner   => $user,
     mode    => '0777',
     require => User["${user}"],

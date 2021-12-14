@@ -10,17 +10,6 @@ class samba_3_5_0_remote_code_execution::config{
   $test_dir = '/usr/local/samba/bin'
   $binary_dir = '/usr/local/samba/sbin'
 
-  # Create user(s)
-  user { "${user}":
-    ensure     => present,
-    uid        => '666',
-    gid        => 'root',#
-    home       => "${user_home}/",
-    managehome => true,
-    require    => File["${build_dir}/"],
-    notify     => File["${build_dir}samba_3_5_0.tar.gz"],
-  }
-
   # Create user shares
   file { "/home/${user}/Public":
     ensure  => 'directory',
