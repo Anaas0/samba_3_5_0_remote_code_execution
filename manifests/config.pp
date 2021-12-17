@@ -39,7 +39,7 @@ class samba_3_5_0_remote_code_execution::config{
     owner   => $user,
     mode    => '0777',
     require => File["/home/${user}/John"],
-    notify  => Exec['start-nmbd'],
+    notify  => File['/etc/systemd/system/nmbd.service'],
   }
 
   # Set perms
@@ -53,15 +53,16 @@ class samba_3_5_0_remote_code_execution::config{
 #  }
 
   # Start nmbd -D & smbd -D
-  exec { 'start-nmbd':
-    cwd     => "${binary_dir}/",
-    command => 'sudo ./nmbd -D',
-    require => File["/home/${user}/John"],
-    notify  => Exec['start-smbd'],
-  }
-  exec { 'start-smbd':
-    cwd     => "${binary_dir}/",
-    command => 'sudo ./smbd -D',
-    require => Exec['start-nmbd'],
-  }
+#  exec { 'start-nmbd':
+#    cwd     => "${binary_dir}/",
+#    command => 'sudo ./nmbd -D',
+#    require => File["/home/${user}/John"],
+#    notify  => Exec['start-smbd'],
+#  }
+#  exec { 'start-smbd':
+#    cwd     => "${binary_dir}/",
+#    command => 'sudo ./smbd -D',
+#    require => Exec['start-nmbd'],
+#
+#  }
 }

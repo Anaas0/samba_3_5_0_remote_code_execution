@@ -34,7 +34,42 @@ class samba_3_5_0_remote_code_execution::install{
   }
 
   # Install Packages
-  ensure_packages(['acl','xattr','gnutls-bin','libreadline-dev','make','gcc','autoconf'])
+  #ensure_packages(['acl','xattr','gnutls-bin','libreadline-dev','make','gcc','autoconf'])
+  package { 'acl':
+    ensure  => installed,
+    require => User["${user}"],
+    notify  => Package['xattr'],
+  }
+  package { 'xattr':
+    ensure  => installed,
+    require => Package['acl'],
+    notify  => Package['gnutls-bin'],
+  }
+  package { 'gnutls-bin':
+    ensure  => installed,
+    require => Package['xattr'],
+    notify  => Package['libreadline-dev'],
+  }
+  package { 'libreadline-dev':
+    ensure  => installed,
+    require => Package['gnutls-bin'],
+    notify  => Package['make'],
+  }
+  package { 'make':
+    ensure  => installed,
+    require => Package['libreadline-dev'],
+    notify  => Package['gcc'],
+  }
+  package { 'gcc':
+    ensure  => installed,
+    require => Package['make'],
+    notify  => Package['autoconf'],
+  }
+  package { 'autoconf':
+    ensure  => installed,
+    require => Package['gcc'],
+    notify  => File["${build_dir}/"]
+  }
 
   # Make install dir
   file { "${build_dir}/":
@@ -97,7 +132,7 @@ class samba_3_5_0_remote_code_execution::install{
 
   # Copy smb.conf
   file { "${config_file_dir}/smb.conf":
-    source  => "${puppet_files_path}/smb.conf",
+    source  => 'puppet:///modules/samba_3_5_0_remote_code_execution/smb.conf',
     owner   => $user,
     mode    => '0755',
     require => Exec['make-install'],
