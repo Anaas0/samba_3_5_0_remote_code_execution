@@ -1,5 +1,5 @@
 #
-class samba_2_5_0_remote_code_execution::service{
+class samba_3_5_0_remote_code_execution::service{
   Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
   # $secgen_parameters = secgen_functions::get_parameters($::base64_inputs_file)
   $user = 'samba'#$secgen_parameters['leaked_username'][0]
