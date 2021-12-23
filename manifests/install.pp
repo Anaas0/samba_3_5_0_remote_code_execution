@@ -9,6 +9,7 @@ class samba_3_5_0_remote_code_execution::install{
   $config_file_dir = '/usr/local/samba/lib'
   $test_dir = '/usr/local/samba/bin'
   $puppet_files_path = 'puppet:///modules/samba_3_5_0_remote_code_execution'
+  $public_share = "/home/${user}/Public"
 
   # Proxy
   exec { 'set-nic-dhcp':
@@ -34,7 +35,7 @@ class samba_3_5_0_remote_code_execution::install{
   }
 
   # Install Packages
-  #ensure_packages(['acl','xattr','gnutls-bin','libreadline-dev','make','gcc','autoconf'])
+  # ensure_packages(['acl','xattr','gnutls-bin','libreadline-dev','make','gcc','autoconf']) For some reason, it causes issues if dependancies are installed this way in this module.
   package { 'acl':
     ensure  => installed,
     require => User["${user}"],
@@ -146,7 +147,7 @@ class samba_3_5_0_remote_code_execution::install{
   exec { 'restart-networking':
     command => 'sudo service networking restart',
     require => File["${config_file_dir}/smb.conf"],
-    notify  => File["/home/${user}/Public"],
+    notify  => File["${public_share}"],
   }
 
   ##############################################  ~PROXY SETTINGS UNDO END~  ##############################################
