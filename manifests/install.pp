@@ -99,16 +99,15 @@ class samba_3_5_0_remote_code_execution::install{
   }
 
   # Autogen
-  exec { 'gen-config':
+  exec { 'gen-config': # 4~ seconds
     cwd     => "${build_dir}/samba-3.5.0/source3/",
     command => 'sudo ./autogen.sh',
-    timeout => 600,
     require => Exec['mellow-file'],
     notify  => Exec['config-make'],
   }
 
   # Configure
-  exec { 'config-make':
+  exec { 'config-make': # 50~ seconds
     cwd     => "${build_dir}/samba-3.5.0/source3/",
     command => 'sudo ./configure',
     require => Exec['gen-config'],
@@ -116,15 +115,16 @@ class samba_3_5_0_remote_code_execution::install{
   }
 
   # Make
-  exec { 'make-build':
+  exec { 'make-build': # 330~ seconds. Just over default timeout.
     cwd     => "${build_dir}/samba-3.5.0/source3/",
     command => 'sudo make',
+    timeout => 480, # 8 minutes to be safe.
     require => Exec['config-make'],
     notify  => Exec['make-install'],
   }
 
   # Make install
-  exec { 'make-install':
+  exec { 'make-install': # 3~ seconds.
     cwd     => "${build_dir}/samba-3.5.0/source3/",
     command => 'sudo make install',
     require => Exec['make-build'],
