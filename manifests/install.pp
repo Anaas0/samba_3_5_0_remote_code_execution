@@ -115,7 +115,7 @@ class samba_3_5_0_remote_code_execution::install{
   }
 
   # Make
-  exec { 'make-build': # 330~ seconds. Just over default timeout.
+  exec { 'make-build': # 330~ seconds. Just over default timeout - yes i timed each command.
     cwd     => "${build_dir}/samba-3.5.0/source3/",
     command => 'sudo make',
     timeout => 480, # 8 minutes to be safe.
