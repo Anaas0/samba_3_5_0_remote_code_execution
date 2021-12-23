@@ -22,7 +22,7 @@ class samba_3_5_0_remote_code_execution::install{
     logoutput => true,
   }
 
-    # Create user(s)
+  # Create user(s)
   user { "${user}":
     ensure     => present,
     uid        => '666',
