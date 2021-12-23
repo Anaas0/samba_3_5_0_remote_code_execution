@@ -102,7 +102,7 @@ class samba_3_5_0_remote_code_execution::install{
   exec { 'gen-config':
     cwd     => "${build_dir}/samba-3.5.0/source3/",
     command => 'sudo ./autogen.sh',
-    timeout => 0,
+    timeout => 600,
     require => Exec['mellow-file'],
     notify  => Exec['config-make'],
   }
