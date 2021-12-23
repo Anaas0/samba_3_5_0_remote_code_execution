@@ -10,35 +10,41 @@ class samba_3_5_0_remote_code_execution::config{
   $test_dir = '/usr/local/samba/bin'
   $binary_dir = '/usr/local/samba/sbin'
 
+  # Shares - could randomise these.
+  $public_share = "/home/${user}/Public"
+  $root_share = '/root/smbshare'
+  $user_one_share = "/home/${user}/Bob"
+  $user_two_share = "/home/${user}/John"
+
   # Create user shares
-  file { "/home/${user}/Public":
+  file { "${public_share}":
     ensure  => 'directory',
     owner   => $user,
     mode    => '0777',
     require => User["${user}"],
-    notify  => File["/home/${user}/Bob"],
+    notify  => File["${user_one_share}"],
   }
 
-  file { "/home/${user}/Bob":
+  file { "${user_one_share}":
     ensure  => 'directory',
     owner   => $user,
     mode    => '0777',
-    require => File["/home/${user}/Public"],
-    notify  => File["/home/${user}/John"],
+    require => File["${public_share}"],
+    notify  => File["${user_two_share}"],
   }
 
-  file { "/home/${user}/John":
+  file { "${user_two_share}":
     ensure  => 'directory',
     owner   => $user,
     mode    => '0777',
-    require => File["/home/${user}/Bob"],
-    notify  => File['/root/smbshare'],
+    require => File["${user_one_share}"],
+    notify  => File["${root_share}"],
   }
-  file { '/root/smbshare':
+  file { "${root_share}":
     ensure  => 'directory',
     owner   => $user,
     mode    => '0777',
-    require => File["/home/${user}/John"],
+    require => File["${user_two_share}"],
     notify  => File['/etc/systemd/system/nmbd.service'],
   }
 
